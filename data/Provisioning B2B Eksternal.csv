@@ -1,0 +1,4 @@
+jenis order,bobot,SERVICE_NUMBER,WONUM,teknisi,JENIS_ORDER,CREATED/REPORTED_DATE,CLOSED_DATE,WORKZONE
+PSB MyRep,2,required,required,required,required,required,required,unrequired
+5 Menara Bintang,8,required,required,required,required,required,required,required
+PSB IBU - FTTR,5,required,required,required,required,required,required,required
