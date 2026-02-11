@@ -46,7 +46,9 @@ logger = logging.getLogger(__name__)
 ) = range(18)
 
 PAGE_SIZE = 10
-DATE_FMT = "%Y-%m-%d %H:%M:%S"
+DATE_FMT = "%d-%m-%Y %H:%M:%S"
+LEGACY_DATE_FMT = "%Y-%m-%d %H:%M:%S"
+DATE_INPUT_HINT = "DD-MM-YYYY HH:MM:SS"
 
 
 def _tz_now(tz_name: str) -> datetime:
@@ -54,10 +56,13 @@ def _tz_now(tz_name: str) -> datetime:
 
 
 def _parse_date(value: str) -> datetime | None:
-    try:
-        return datetime.strptime(value.strip(), DATE_FMT)
-    except ValueError:
-        return None
+    text = value.strip()
+    for fmt in (DATE_FMT, LEGACY_DATE_FMT):
+        try:
+            return datetime.strptime(text, fmt)
+        except ValueError:
+            continue
+    return None
 
 
 def _fmt_order_item(item: OrderItem) -> str:
@@ -224,24 +229,24 @@ async def wo_number(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 async def ticket_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data["ticket_id"] = update.message.text.strip()
-    await update.message.reply_text(f"Masukkan Tanggal Open ({DATE_FMT}):")
+    await update.message.reply_text(f"Masukkan Tanggal Open ({DATE_INPUT_HINT}):")
     return DATE_OPEN
 
 
 async def date_open(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     text = update.message.text.strip()
     if not _parse_date(text):
-        await update.message.reply_text(f"Format salah. Gunakan {DATE_FMT}")
+        await update.message.reply_text(f"Format salah. Gunakan {DATE_INPUT_HINT}")
         return DATE_OPEN
     context.user_data["tanggal_open"] = text
-    await update.message.reply_text(f"Masukkan Tanggal Close ({DATE_FMT}):")
+    await update.message.reply_text(f"Masukkan Tanggal Close ({DATE_INPUT_HINT}):")
     return DATE_CLOSE
 
 
 async def date_close(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     text = update.message.text.strip()
     if not _parse_date(text):
-        await update.message.reply_text(f"Format salah. Gunakan {DATE_FMT}")
+        await update.message.reply_text(f"Format salah. Gunakan {DATE_INPUT_HINT}")
         return DATE_CLOSE
     context.user_data["tanggal_close"] = text
     units = context.bot_data["units"]
@@ -447,9 +452,8 @@ def _compute_stats(records: List[dict], tech_name: str, now: datetime) -> Tuple[
         if tech_name not in (tech1, tech2):
             continue
         date_str = (r.get("tanggal_close") or "").strip()
-        try:
-            dt = datetime.strptime(date_str, DATE_FMT)
-        except ValueError:
+        dt = _parse_date(date_str)
+        if not dt:
             continue
         weight = float(r.get("bobot") or 0)
         if dt.date() == today:
@@ -593,4 +597,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
