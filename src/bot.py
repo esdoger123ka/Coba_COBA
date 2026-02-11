@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import logging
 from datetime import datetime
@@ -481,7 +481,7 @@ async def confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         teknisi_1=context.user_data["t1_name"],
         teknisi_2=context.user_data.get("t2_name", ""),
         workzone=context.user_data["workzone"],
-@@ -438,103 +540,102 @@ async def setme_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+@@ -438,171 +540,174 @@ async def setme_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     techs = context.bot_data["techs"]
     tech = techs[int(idx_str)]
     user = query.from_user
@@ -580,18 +580,63 @@ def build_app() -> Application:
     app.bot_data["techs"] = techs
     app.bot_data["units"] = units
 
+    conv_states = {
+        SEGMENT: [CallbackQueryHandler(segment_chosen, pattern=r"^SEG\|")],
+        ORDER_QUERY: [
+            CallbackQueryHandler(order_selected, pattern=r"^ORDSEL\|"),
+            CallbackQueryHandler(order_page, pattern=r"^ORDPAGE\|"),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, order_query),
+        ],
+        SERVICE_NUMBER: [MessageHandler(filters.TEXT & ~filters.COMMAND, service_number)],
+        WO_NUMBER: [MessageHandler(filters.TEXT & ~filters.COMMAND, wo_number)],
+        TICKET_ID: [MessageHandler(filters.TEXT & ~filters.COMMAND, ticket_id)],
+        DATE_OPEN: [MessageHandler(filters.TEXT & ~filters.COMMAND, date_open)],
+        DATE_CLOSE: [MessageHandler(filters.TEXT & ~filters.COMMAND, date_close)],
+        TECH1_UNIT: [
+            CallbackQueryHandler(unit_selected, pattern=r"^UNITSEL\|t1\|"),
+            CallbackQueryHandler(unit_page, pattern=r"^UNITPAGE\|t1\|"),
+        ],
+        TECH1_NAME: [
+            CallbackQueryHandler(tech_selected, pattern=r"^TECHSEL\|t1\|"),
+            CallbackQueryHandler(tech_page, pattern=r"^TECHPAGE\|t1\|"),
+        ],
+        TECH2_DECIDE: [CallbackQueryHandler(tech2_decide, pattern=r"^(T2NONE|T2PICK)$")],
+        TECH2_UNIT: [
+            CallbackQueryHandler(unit_selected, pattern=r"^UNITSEL\|t2\|"),
+            CallbackQueryHandler(unit_page, pattern=r"^UNITPAGE\|t2\|"),
+        ],
+        TECH2_NAME: [
+            CallbackQueryHandler(tech_selected, pattern=r"^TECHSEL\|t2\|"),
+            CallbackQueryHandler(tech_page, pattern=r"^TECHPAGE\|t2\|"),
+        ],
+        WORKZONE: [MessageHandler(filters.TEXT & ~filters.COMMAND, workzone)],
+        KETERANGAN: [
+            CommandHandler("skip", skip_keterangan),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, keterangan),
+        ],
+        CONFIRM: [CallbackQueryHandler(confirm, pattern=r"^(SAVE|CANCEL)$")],
+    }
+
     conv = ConversationHandler(
         entry_points=[CommandHandler("start", start)],
-        states={
-            SEGMENT: [CallbackQueryHandler(segment_chosen, pattern=r"^SEG\|")],
-@@ -583,26 +684,26 @@ def build_app() -> Application:
-                CallbackQueryHandler(unit_page, pattern=r"^UNITPAGE\|me\|"),
-            ],
-            SETME_NAME: [
-                CallbackQueryHandler(setme_name, pattern=r"^TECHSEL\|me\|"),
-                CallbackQueryHandler(tech_page, pattern=r"^TECHPAGE\|me\|"),
-            ],
-        },
+        states=conv_states,
+        fallbacks=[CommandHandler("cancel", cancel)],
+    )
+
+    setme_states = {
+        SETME_UNIT: [
+            CallbackQueryHandler(setme_unit, pattern=r"^UNITSEL\|me\|"),
+            CallbackQueryHandler(unit_page, pattern=r"^UNITPAGE\|me\|"),
+        ],
+        SETME_NAME: [
+            CallbackQueryHandler(setme_name, pattern=r"^TECHSEL\|me\|"),
+            CallbackQueryHandler(tech_page, pattern=r"^TECHPAGE\|me\|"),
+        ],
+    }
+
+    setme_conv = ConversationHandler(
+        entry_points=[CommandHandler("setme", setme)],
+        states=setme_states,
         fallbacks=[CommandHandler("cancel", cancel)],
     )
 
@@ -610,4 +655,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()␊
+    main()
