@@ -341,31 +341,19 @@ async def skip_keterangan(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 async def _confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     item: OrderItem = context.user_data["order"]
     summary = (
-        "*Konfirmasi data:*
-"
-        f"Segment: {context.user_data['segment']}
-"
-        f"Jenis Order: {item.name}
-"
-        f"Bobot: {item.weight}
-"
-        f"Service Number: {context.user_data['service_number']}
-"
-        f"WO Number: {context.user_data['wo_number']}
-"
-        f"Ticket ID: {context.user_data['ticket_id']}
-"
-        f"Tanggal Open: {context.user_data['tanggal_open']}
-"
-        f"Tanggal Close: {context.user_data['tanggal_close']}
-"
-        f"Teknisi 1: {context.user_data['t1_name']}
-"
-        f"Teknisi 2: {context.user_data.get('t2_name','') or '-'}
-"
-        f"Workzone: {context.user_data['workzone']}
-"
-        f"Keterangan: {context.user_data.get('keterangan','') or '-'}"
+    "*Konfirmasi data:*\n"
+        f"Segment: {context.user_data['segment']}\n"
+        f"Jenis Order: {item.name}\n"
+        f"Bobot: {item.weight}\n"
+        f"Service Number: {context.user_data['service_number']}\n"
+        f"WO Number: {context.user_data['wo_number']}\n"
+        f"Ticket ID: {context.user_data['ticket_id']}\n"
+        f"Tanggal Open: {context.user_data['tanggal_open']}\n"
+        f"Tanggal Close: {context.user_data['tanggal_close']}\n"
+        f"Teknisi 1: {context.user_data['t1_name']}\n"
+        f"Teknisi 2: {context.user_data.get('t2_name', '') or '-'}\n"
+        f"Workzone: {context.user_data['workzone']}\n"
+        f"Keterangan: {context.user_data.get('keterangan', '') or '-'}"
     )
     buttons = [
         [InlineKeyboardButton("Simpan", callback_data="SAVE")],
@@ -373,7 +361,6 @@ async def _confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     ]
     await update.message.reply_text(summary, parse_mode=ParseMode.MARKDOWN, reply_markup=InlineKeyboardMarkup(buttons))
     return CONFIRM
-
 
 async def confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     query = update.callback_query
@@ -606,3 +593,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
