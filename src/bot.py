@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import logging
 from datetime import datetime
@@ -120,7 +120,7 @@ def _order_page_keyboard(segment: str, items: List[OrderItem], page: int) -> Inl
     if nav:
         buttons.append(nav)
     return InlineKeyboardMarkup(buttons)
-    for idx in page_items:
+        for idx in page_items:
         t = techs[idx]
         buttons.append([
             InlineKeyboardButton(text=t.name, callback_data=f"TECHSEL|{key}|{idx}")
@@ -480,7 +480,7 @@ async def confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         teknisi_1=context.user_data["t1_name"],
         teknisi_2=context.user_data.get("t2_name", ""),
         workzone=context.user_data["workzone"],
-    techs = context.bot_data["techs"]
+            techs = context.bot_data["techs"]
     tech = techs[int(idx_str)]
     user = query.from_user
     config = context.bot_data["config"]
@@ -654,5 +654,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-
