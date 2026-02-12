@@ -197,7 +197,7 @@ async def order_selected(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return ORDER_QUERY
     context.user_data["order"] = item
     await query.edit_message_text(f"Terpilih: {_fmt_order_item(item)}")
-        await query.message.reply_text(
+    await query.message.reply_text(
         "Masukkan Service Number (No Inet/Voice/Site/dll):",
         reply_markup=_field_nav_keyboard(),
     )
@@ -695,3 +695,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
