@@ -120,7 +120,7 @@ def _order_page_keyboard(segment: str, items: List[OrderItem], page: int) -> Inl
     if nav:
         buttons.append(nav)
     return InlineKeyboardMarkup(buttons)
-@@ -114,289 +145,360 @@ def _tech_keyboard(tech_indices: List[int], techs, page: int, key: str) -> Inlin
+def _tech_keyboard(tech_indices: List[int], techs, page: int, key: str) -> Inlin
     for idx in page_items:
         t = techs[idx]
         buttons.append([
@@ -481,7 +481,8 @@ async def confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         teknisi_1=context.user_data["t1_name"],
         teknisi_2=context.user_data.get("t2_name", ""),
         workzone=context.user_data["workzone"],
-@@ -438,171 +540,174 @@ async def setme_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+
+async def setme_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     techs = context.bot_data["techs"]
     tech = techs[int(idx_str)]
     user = query.from_user
@@ -656,3 +657,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
