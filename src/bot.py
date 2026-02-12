@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import logging
 from datetime import datetime
@@ -481,7 +481,6 @@ async def confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         teknisi_1=context.user_data["t1_name"],
         teknisi_2=context.user_data.get("t2_name", ""),
         workzone=context.user_data["workzone"],
-
 async def setme_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     techs = context.bot_data["techs"]
     tech = techs[int(idx_str)]
@@ -657,4 +656,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
