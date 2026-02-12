@@ -120,7 +120,6 @@ def _order_page_keyboard(segment: str, items: List[OrderItem], page: int) -> Inl
     if nav:
         buttons.append(nav)
     return InlineKeyboardMarkup(buttons)
-def _tech_keyboard(tech_indices: List[int], techs, page: int, key: str) -> Inlin
     for idx in page_items:
         t = techs[idx]
         buttons.append([
@@ -656,3 +655,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
